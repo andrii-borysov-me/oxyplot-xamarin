@@ -6,6 +6,7 @@
 //   Provides a render context for Android.Graphics.Canvas.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+using Android.Text;
 
 namespace OxyPlot.Xamarin.Android
 {
@@ -295,6 +296,7 @@ namespace OxyPlot.Xamarin.Android
                 {
                     width = height = 0f;
                 }
+                var originalTextWidth = width;
 
                 if (maxSize.HasValue)
                 {
@@ -328,6 +330,15 @@ namespace OxyPlot.Xamarin.Android
                     var y1 = -height - y0;
                     this.canvas.ClipRect(x1, y1, x1 + width, y1 + height);
                     this.canvas.Translate(0, lineHeight - height);
+                }
+
+                if (width < originalTextWidth)
+                {
+                    text = TextUtils.Ellipsize(
+                        text,
+                        new TextPaint(paint),
+                        width,
+                        TextUtils.TruncateAt.End) ?? text;
                 }
 
                 this.canvas.DrawText(text, 0, 0, this.paint);
